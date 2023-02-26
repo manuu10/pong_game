@@ -39,11 +39,12 @@ class Ball extends PositionComponent
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
     final collisionPoint = intersectionPoints.first;
+    print(collisionPoint);
     if (other is ScreenHitbox) {
-      if (collisionPoint.x == 0 || collisionPoint.x == gameRef.size.x) {
+      if (collisionPoint.x <= 0 || collisionPoint.x >= gameRef.size.x) {
         // velocity.x = -velocity.x;
         resetBall();
-      } else if (collisionPoint.y == 0 || collisionPoint.y == gameRef.size.y) {
+      } else if (collisionPoint.y <= 0 || collisionPoint.y >= gameRef.size.y) {
         velocity.y = -velocity.y;
       }
     }
