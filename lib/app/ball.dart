@@ -3,11 +3,16 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:pong_game/app/player_paddle.dart';
+import 'package:pong_game/data/game_score/game_score_cubit.dart';
 
 class Ball extends PositionComponent
-    with HasGameRef<FlameGame>, CollisionCallbacks {
+    with
+        HasGameRef<FlameGame>,
+        CollisionCallbacks,
+        FlameBlocReader<GameScoreCubit, GameScoreState> {
   Vector2 velocity;
   double ballSize = 5;
   Ball() : velocity = Vector2(400, 400);
@@ -20,7 +25,7 @@ class Ball extends PositionComponent
   }
 
   @override
-  FutureOr<void> onLoad() {
+  Future<void> onLoad() {
     resetBall();
     ball = CircleComponent(
       radius: ballSize,
@@ -39,11 +44,10 @@ class Ball extends PositionComponent
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
     final collisionPoint = intersectionPoints.first;
-    print(collisionPoint);
     if (other is ScreenHitbox) {
       if (collisionPoint.x <= 0 || collisionPoint.x >= gameRef.size.x) {
-        // velocity.x = -velocity.x;
         resetBall();
+        bloc.onScored(!(collisionPoint.x <= 0));
       } else if (collisionPoint.y <= 0 || collisionPoint.y >= gameRef.size.y) {
         velocity.y = -velocity.y;
       }
