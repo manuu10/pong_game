@@ -15,13 +15,19 @@ class Ball extends PositionComponent
         FlameBlocReader<GameScoreCubit, GameScoreState> {
   Vector2 velocity;
   double ballSize = 5;
+  bool moving = true;
   Ball() : velocity = Vector2(400, 400);
 
   late final CircleComponent ball;
   late final CircleHitbox ballHitbox;
 
-  void resetBall() {
+  void resetBall([bool delayed = true]) async {
     position = Vector2(gameRef.size.x / 2, gameRef.size.y / 2);
+    if (delayed) {
+      moving = false;
+      await Future.delayed(Duration(seconds: 2));
+      moving = true;
+    }
   }
 
   @override
@@ -60,7 +66,9 @@ class Ball extends PositionComponent
 
   @override
   void update(double dt) {
-    position += velocity * dt;
+    if (moving) {
+      position += velocity * dt;
+    }
     super.update(dt);
   }
 }

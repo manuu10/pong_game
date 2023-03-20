@@ -21,10 +21,11 @@ class PlayerPaddle extends PositionComponent
   double speed = 400;
 
   PlayerPaddle(this.leftPlayer)
-      : downKey =
-            leftPlayer ? LogicalKeyboardKey.arrowDown : LogicalKeyboardKey.keyS,
+      : downKey = !leftPlayer
+            ? LogicalKeyboardKey.arrowDown
+            : LogicalKeyboardKey.keyS,
         upKey =
-            leftPlayer ? LogicalKeyboardKey.arrowUp : LogicalKeyboardKey.keyW;
+            !leftPlayer ? LogicalKeyboardKey.arrowUp : LogicalKeyboardKey.keyW;
 
   @override
   FutureOr<void> onLoad() async {
